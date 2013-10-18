@@ -7,13 +7,13 @@ abstract class ControllerException extends Exception {
   def optServerErrorCode: Option[ServerErrorCode]
   def optUserErrorCode: Option[UserErrorCode]
   def statusCode: Int
-  def optionalCause: Option[Throwable]
+  def optCause: Option[Throwable]
 }
 
 case class ServerErrorControllerException(
     val errorCode: ServerErrorCode,
-    val optionalCause: Option[Throwable] = None,
-    val optionalInfo: Option[Map[String, String]] = None) extends ControllerException {
+    val optCause: Option[Throwable] = None,
+    val optInfo: Option[Map[String, String]] = None) extends ControllerException {
   def this(ec: ServerErrorCode, cause: Throwable) = this(ec, Option(cause))
   def this(ec: ServerErrorCode, info: Map[String, String]) = this(ec, None, Option(info))
   def this(ec: ServerErrorCode, cause: Throwable, info: Map[String, String]) = this(ec, Option(cause), Option(info))
@@ -24,8 +24,8 @@ case class ServerErrorControllerException(
 
 case class UserErrorControllerException(
     val errorCode: UserErrorCode,
-    val optionalCause: Option[Throwable] = None,
-    val optionalInfo: Option[Map[String, String]] = None) extends ControllerException {
+    val optCause: Option[Throwable] = None,
+    val optInfo: Option[Map[String, String]] = None) extends ControllerException {
   def this(ec: UserErrorCode, cause: Throwable) = this(ec, Option(cause))
   def this(ec: UserErrorCode, info: Map[String, String]) = this(ec, None, Option(info))
   def this(ec: UserErrorCode, cause: Throwable, info: Map[String, String]) = this(ec, Option(cause), Option(info))
