@@ -9,7 +9,13 @@ import mpff.resources.ServerErrorCode
 import mpff.resources.UserErrorCode
 
 abstract class MPFFAbstrctActionController[ActionContext <: MPFFActionContext] extends MPFFAbstractController[ActionContext] {
-  protected def render(content: Html): SimpleResult = Ok(content)
+  def renderText(text: String)(implicit context: ActionContext) = {
+    finalizeResult(Ok(text))
+  }
+
+  def renderHTML(content: Html)(implicit context: ActionContext) = {
+    finalizeResult(Ok(content))
+  }
 
   override protected def renderInvalid(ec: UserErrorCode, e: Option[Throwable] = None, optInfo: Option[Map[String, String]] = None)(implicit context: ActionContext): SimpleResult = {
     e match {

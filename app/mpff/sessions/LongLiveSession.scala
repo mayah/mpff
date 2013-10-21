@@ -1,4 +1,4 @@
-package mpff.session
+package mpff.sessions
 
 import play.api.mvc.CookieBaker
 import play.api.Play
