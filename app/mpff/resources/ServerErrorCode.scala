@@ -2,8 +2,12 @@ package mpff.resources
 
 import play.api.i18n.Messages
 
-abstract class ServerErrorCode(val descriptionId: String, val statusCode: Int) {
+case class ServerErrorCode(val descriptionId: String, val statusCode: Int) {
   def description = Messages(descriptionId)
 }
 
-object ServerErrorUnknown extends ServerErrorCode("error.unknown", 500)
+trait MPFFServerErrorCodes {
+  val ERROR_UNKNOWN = ServerErrorCode("error.unknown", 500)
+}
+
+object BasicServerErrorCodes extends MPFFServerErrorCodes

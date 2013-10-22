@@ -1,7 +1,7 @@
 package mpff.controllers
 
-import play.api.mvc.Request
 import play.api.mvc.AnyContent
+import play.api.mvc.Request
 
 class MPFFActionContext(val request: Request[AnyContent]) {
   var sessionValues: List[(String, String)] = List.empty

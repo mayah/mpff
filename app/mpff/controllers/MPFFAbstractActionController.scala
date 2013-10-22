@@ -2,13 +2,14 @@ package mpff.controllers
 
 package controllers.action
 
-import play.api.Logger
-import play.api.mvc.SimpleResult
-import play.api.templates.Html
+import mpff.controllers.MPFFAbstractController
+import mpff.controllers.MPFFActionContext
 import mpff.resources.ServerErrorCode
 import mpff.resources.UserErrorCode
+import play.api.mvc.SimpleResult
+import play.api.templates.Html
 
-abstract class MPFFAbstrctActionController[ActionContext <: MPFFActionContext] extends MPFFAbstractController[ActionContext] {
+abstract class MPFFAbstractActionController[ActionContext <: MPFFActionContext] extends MPFFAbstractController[ActionContext] {
   def renderText(text: String)(implicit context: ActionContext) = {
     finalizeResult(Ok(text))
   }
