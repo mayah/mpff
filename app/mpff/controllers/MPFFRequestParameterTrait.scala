@@ -1,7 +1,6 @@
 package mpff.controllers
 
 import java.util.UUID
-
 import mpff.resources.BasicUserErrorCodes
 import play.api.libs.json.JsBoolean
 import play.api.libs.json.JsNull
@@ -9,6 +8,7 @@ import play.api.libs.json.JsNumber
 import play.api.libs.json.JsString
 import play.api.libs.json.JsUndefined
 import play.api.libs.json.JsValue
+import play.api.libs.json.JsArray
 
 trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
   // ----------------------------------------------------------------------
@@ -153,6 +153,19 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
     jsonOptUUID(optJson, key) match {
       case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_JSON_PARAMETER, Map(key -> "invalid"))
       case Some(x) => x
+    }
+  }
+
+  def jsonOptJSONArray(optJson: Option[JsValue], key: String): Option[JsArray] = {
+    optJson match {
+      case None => None
+      case Some(x) => (x \ key).asOpt[JsArray]
+    }
+  }
+
+  def jsonEnsureJSONArray(optJson: Option[JsValue], key: String): JsArray = {
+    jsonOptJSONArray(optJson, key).getOrElse {
+      throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_JSON_PARAMETER, Map(key -> "missing"))
     }
   }
 
