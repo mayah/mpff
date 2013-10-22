@@ -14,33 +14,33 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
   // ----------------------------------------------------------------------
   // Input Parameters (Query)
 
-  def paramString(key: String)(implicit context: ActionContext): Option[String] = {
+  def paramOptString(key: String)(implicit context: ActionContext): Option[String] = {
     context.request.queryString.get(key) match {
       case None => None
       case Some(values) => values.headOption
     }
   }
 
-  def paramMultipleString(key: String)(implicit context: ActionContext): Option[Seq[String]] = {
+  def paramOptMultipleString(key: String)(implicit context: ActionContext): Option[Seq[String]] = {
     context.request.queryString.get(key)
   }
 
-  def paramUUID(key: String)(implicit context: ActionContext): Option[UUID] = {
-    paramString(key) match {
+  def paramOptUUID(key: String)(implicit context: ActionContext): Option[UUID] = {
+    paramOptString(key) match {
       case None => None
       case Some(x) => parseUUID(x)
     }
   }
 
-  def ensureParamString(key: String)(implicit context: ActionContext): String = {
-    paramString(key) match {
+  def paramEnsureString(key: String)(implicit context: ActionContext): String = {
+    paramOptString(key) match {
       case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_QUERY_PARAMETER, Map(key -> "missing"))
       case Some(x) => x
     }
   }
 
-  def ensureParamUUID(key: String)(implicit context: ActionContext): UUID = {
-    paramUUID(key) match {
+  def paramEnsureUUID(key: String)(implicit context: ActionContext): UUID = {
+    paramOptUUID(key) match {
       case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_QUERY_PARAMETER, Map(key -> "invalid"))
       case Some(x) => x
     }
@@ -77,7 +77,7 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
     }
   }
 
-  def jsonEensureString(optJson: Option[JsValue], key: String): String = {
+  def jsonEnsureString(optJson: Option[JsValue], key: String): String = {
     jsonOptString(optJson, key) match {
       case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_JSON_PARAMETER, Map(key -> "invalid"))
       case Some(x) => x
