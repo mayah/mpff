@@ -21,21 +21,35 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
     }
   }
 
+  def paramEnsureString(key: String)(implicit context: ActionContext): String = {
+    paramOptString(key) match {
+      case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_QUERY_PARAMETER, Map(key -> "missing"))
+      case Some(x) => x
+    }
+  }
+
   def paramOptMultipleString(key: String)(implicit context: ActionContext): Option[Seq[String]] = {
     context.request.queryString.get(key)
+  }
+
+  def paramOptInt(key: String)(implicit context: ActionContext): Option[Int] = {
+    paramOptString(key) match {
+      case None => None
+      case Some(x) => try { Some(x.toInt) } catch { case e: NumberFormatException => None }
+    }
+  }
+
+  def paramEnsureInt(key: String)(implicit context: ActionContext): Int = {
+    paramOptInt(key) match {
+      case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_QUERY_PARAMETER, Map(key -> "invalid"))
+      case Some(x) => x
+    }
   }
 
   def paramOptUUID(key: String)(implicit context: ActionContext): Option[UUID] = {
     paramOptString(key) match {
       case None => None
       case Some(x) => parseUUID(x)
-    }
-  }
-
-  def paramEnsureString(key: String)(implicit context: ActionContext): String = {
-    paramOptString(key) match {
-      case None => throw new UserErrorControllerException(BasicUserErrorCodes.INVALID_QUERY_PARAMETER, Map(key -> "missing"))
-      case Some(x) => x
     }
   }
 
