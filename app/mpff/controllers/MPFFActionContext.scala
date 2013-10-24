@@ -3,7 +3,9 @@ package mpff.controllers
 import play.api.mvc.AnyContent
 import play.api.mvc.Request
 
-class MPFFActionContext(val request: Request[AnyContent]) {
+class MPFFActionContext(val request: Request[AnyContent],
+                        val sessionToken: String,
+                        val sessionId: String) {
   var sessionValues: List[(String, String)] = List.empty
   def addSessionValue(key: String, value: String) {
     sessionValues = (key, value) :: sessionValues

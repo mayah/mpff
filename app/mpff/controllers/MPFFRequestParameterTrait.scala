@@ -1,16 +1,18 @@
 package mpff.controllers
 
 import java.util.UUID
+
+import mpff.resources.BasicConstants
 import mpff.resources.BasicUserErrorCodes
+import play.api.libs.json.JsArray
 import play.api.libs.json.JsBoolean
 import play.api.libs.json.JsNull
 import play.api.libs.json.JsNumber
 import play.api.libs.json.JsString
 import play.api.libs.json.JsUndefined
 import play.api.libs.json.JsValue
-import play.api.libs.json.JsArray
 
-trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
+trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] extends MPFFParserTrait {
   // ----------------------------------------------------------------------
   // Input Parameters (Query)
 
@@ -170,21 +172,14 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] {
   }
 
   // ----------------------------------------------------------------------
-  // Input Parameter parsing
+  // Check session tokens
 
-  private def parseBoolean(value: String): Option[Boolean] = {
-    value.toLowerCase() match {
-      case "y" | "yes" | "t" | "true"  | "on" => Some(true)
-      case "n" | "no"  | "f" | "false" | "off" => Some(false)
-      case _ => None
+  def ensureValidSessionToken(optJson: Option[JsValue])(implicit context: ActionContext) {
+    jsonOptString(optJson, BasicConstants.Session.TOKEN_KEY) match {
+      case None => throw UserErrorControllerException(BasicUserErrorCodes.INVALID_SESSION_TOKEN)
+      case Some(token) if (token != context.sessionToken) => throw UserErrorControllerException(BasicUserErrorCodes.INVALID_SESSION_TOKEN)
+      case Some(_) => () // OK
     }
   }
 
-  private def parseUUID(value: String): Option[UUID] = {
-    try {
-      Some(UUID.fromString(value))
-    } catch {
-      case e: IllegalArgumentException => None
-    }
-  }
 }
