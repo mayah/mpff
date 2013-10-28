@@ -10,19 +10,19 @@ import play.api.mvc.SimpleResult
 import play.api.templates.Html
 
 abstract class MPFFAbstractActionController[ActionContext <: MPFFActionContext] extends MPFFAbstractController[ActionContext] {
-  def renderText(text: String)(implicit context: ActionContext) = {
+  protected def renderText(text: String)(implicit context: ActionContext) = {
     finalizeResult(Ok(text))
   }
 
-  def renderHTML(content: Html)(implicit context: ActionContext) = {
+  protected def renderHTML(content: Html)(implicit context: ActionContext) = {
     finalizeResult(Ok(content))
   }
 
-  def renderByteArray(content: Array[Byte])(implicit context: ActionContext) = {
+  protected def renderByteArray(content: Array[Byte])(implicit context: ActionContext) = {
     finalizeResult(Ok(content))
   }
 
-  def renderRedirect(url: String)(implicit context: ActionContext) = {
+  protected def renderRedirect(url: String)(implicit context: ActionContext) = {
     finalizeResult(Redirect(url))
   }
 
