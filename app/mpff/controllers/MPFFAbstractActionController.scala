@@ -18,6 +18,14 @@ abstract class MPFFAbstractActionController[ActionContext <: MPFFActionContext] 
     finalizeResult(Ok(content))
   }
 
+  def renderByteArray(content: Array[Byte])(implicit context: ActionContext) = {
+    finalizeResult(Ok(content))
+  }
+
+  def renderRedirect(url: String)(implicit context: ActionContext) = {
+    finalizeResult(Redirect(url))
+  }
+
   override protected def renderInvalid(ec: UserErrorCode, e: Option[Throwable] = None, optInfo: Option[Map[String, String]] = None)(implicit context: ActionContext): SimpleResult = {
     e match {
       case None => finalizeResult(BadRequest)
