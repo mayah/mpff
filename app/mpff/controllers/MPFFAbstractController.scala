@@ -17,12 +17,12 @@ abstract class MPFFAbstractController[ActionContext <: MPFFActionContext] extend
   def prepareActionContext(request: Request[AnyContent]): ActionContext
 
   object MPFFAction {
-    def apply[A](block: (Request[AnyContent] => ActionContext => SimpleResult)) = Action { request: Request[AnyContent] =>
+    def apply[A](block: (ActionContext => SimpleResult)) = Action { request: Request[AnyContent] =>
       val beginTime = System.currentTimeMillis()
       implicit val context = prepareActionContext(request)
 
       try {
-        block(request)(context)
+        block(context)
       } catch {
         case e: ControllerException => renderException(e)
         case e: Exception => renderError(BasicServerErrorCodes.ERROR_UNKNOWN, Some(e))
