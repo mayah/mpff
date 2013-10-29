@@ -1,9 +1,5 @@
 package mpff.controllers
 
-package controllers.action
-
-import mpff.controllers.MPFFAbstractController
-import mpff.controllers.MPFFActionContext
 import mpff.resources.ServerErrorCode
 import mpff.resources.UserErrorCode
 import play.api.mvc.SimpleResult
