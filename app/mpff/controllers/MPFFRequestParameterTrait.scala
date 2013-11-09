@@ -65,6 +65,14 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] extends MPFF
   // ----------------------------------------------------------------------
   // Input Parameters (json string)
 
+  def jsonOptString(key: String)(implicit context: ActionContext): Option[String] = {
+    jsonOptString(context.request.body.asJson, key)
+  }
+
+  def jsonEnsureString(key: String)(implicit context: ActionContext): String = {
+    jsonEnsureString(context.request.body.asJson, key)
+  }
+
   def jsonOptString(optJson: Option[JsValue], key: String): Option[String] = {
     optJson match {
       case None => None
