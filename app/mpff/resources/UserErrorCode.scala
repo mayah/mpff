@@ -19,10 +19,10 @@ trait MPFFUserErrorCodes {
 
   // --- 401
   val INVALID_LOGIN_REQUIRED = UserErrorCode("invalid.login.required", 401)
-  val INVALID_ADMIN_REQUIRED = UserErrorCode("invalid.admin.required", 401)
 
   // --- 403
   val INVALID_FORBIDDEN = UserErrorCode("invalid.forbidden", 403)
+  val INVALID_ADMIN_REQUIRED = UserErrorCode("invalid.admin.required", 403)
 
   // --- 404
   val INVALID_NOT_FOUND = UserErrorCode("invalid.notfound", 404)
