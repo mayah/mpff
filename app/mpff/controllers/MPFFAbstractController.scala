@@ -25,7 +25,9 @@ abstract class MPFFAbstractController[ActionContext <: MPFFActionContext] extend
         block(context)
       } catch {
         case e: ControllerException => renderException(e)
-        case e: Exception => renderError(BasicServerErrorCodes.ERROR_UNKNOWN, Some(e))
+        case e: Exception =>
+          Logger.warn("Unknown error: ", e)
+          renderError(BasicServerErrorCodes.ERROR_UNKNOWN, Some(e))
       } finally {
         val endTime = System.currentTimeMillis()
         Logger.info(request.uri + " took " + (endTime - beginTime) + "[msec] to process.")
