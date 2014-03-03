@@ -12,6 +12,7 @@ import play.api.mvc.SimpleResult
 abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] extends MPFFAbstractController[ActionContext] {
   private val UTF8 = Charset.forName("UTF8")
   private val RESULT_KEY = "result"
+  private val RESULT_ERROR_ID_KEY = "errorId"
   private val DESCRIPTION_KEY = "description"
   private val OPTIONAL_INFO = "optInfo"
 
