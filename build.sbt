@@ -8,4 +8,4 @@ libraryDependencies ++= Seq(
   cache
 )
 
-play.Project.playScalaSettings
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
