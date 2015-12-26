@@ -8,4 +8,4 @@ libraryDependencies ++= Seq(
   cache
 )
 
-// lazy val root = (project in file(".")).enablePlugins(SbtWeb)
+lazy val root = (project in file(".")).enablePlugins(SbtWeb)
