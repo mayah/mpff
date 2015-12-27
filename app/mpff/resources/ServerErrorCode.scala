@@ -3,7 +3,7 @@ package mpff.resources
 import play.api.i18n.Messages
 
 case class ServerErrorCode(val descriptionId: String, val statusCode: Int = 500) {
-  def description = Messages(descriptionId)
+  def description(implicit messages: Messages) = Messages(descriptionId)
 }
 
 trait MPFFServerErrorCodes {

@@ -3,7 +3,7 @@ package mpff.resources
 import play.api.i18n.Messages
 
 case class MessageCode(val descriptionId: String) {
-  def description = Messages(descriptionId)
+  def description(implicit messages: Messages) = Messages(descriptionId)
 }
 
 trait MPFFMessageCodes {

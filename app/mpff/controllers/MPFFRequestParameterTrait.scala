@@ -92,10 +92,10 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] extends MPFF
   def jsonOptOptString(optJson: Option[JsValue], key: String): Option[Option[String]] = {
     optJson match {
       case None => None
-      case Some(x) => (x \ key) match {
-        case _: JsUndefined => None
-        case JsNull => Some(None)
-        case JsString(str) => Some(Some(str))
+      case Some(json) => (json \ key).toOption match {
+        case None => None
+        case Some(JsNull) => Some(None)
+        case Some(JsString(str)) => Some(Some(str))
         case _ => None
       }
     }
@@ -111,9 +111,9 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] extends MPFF
   def jsonOptInt(optJson: Option[JsValue], key: String): Option[Int] = {
     optJson match {
       case None => None
-      case Some(json) => (json \ key) match {
-        case x: JsString => try { Some(x.value.toInt) } catch { case e: NumberFormatException => None }
-        case x: JsNumber => try { Some(x.value.toInt) } catch { case e: NumberFormatException => None }
+      case Some(json) => (json \ key).toOption match {
+        case Some(x: JsString) => try { Some(x.value.toInt) } catch { case e: NumberFormatException => None }
+        case Some(x: JsNumber) => try { Some(x.value.toInt) } catch { case e: NumberFormatException => None }
         case _ => None
       }
     }
@@ -129,9 +129,9 @@ trait MPFFRequestParameterTrait[ActionContext <: MPFFActionContext] extends MPFF
   def jsonOptBoolean(optJson: Option[JsValue], key: String): Option[Boolean] = {
     optJson match {
       case None => None
-      case Some(json) => (json \ key) match {
-        case JsBoolean(x) => Some(x)
-        case JsString(x) => parseBoolean(x)
+      case Some(json) => (json \ key).toOption match {
+        case Some(JsBoolean(x)) => Some(x)
+        case Some(JsString(x)) => parseBoolean(x)
         case _ => None
       }
     }

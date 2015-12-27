@@ -9,15 +9,14 @@ import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.Controller
 import play.api.mvc.Request
-import play.api.mvc.SimpleResult
+import play.api.mvc.Result
 
 abstract class MPFFAbstractController[ActionContext <: MPFFActionContext] extends Controller {
-
   // A user has to implement this function.
   def prepareActionContext(request: Request[AnyContent]): ActionContext
 
   object MPFFAction {
-    def apply[A](block: (ActionContext => SimpleResult)) = Action { request: Request[AnyContent] =>
+    def apply[A](block: (ActionContext => Result)) = Action { request: Request[AnyContent] =>
       val beginTime = System.currentTimeMillis()
       implicit val context = prepareActionContext(request)
 
@@ -35,7 +34,7 @@ abstract class MPFFAbstractController[ActionContext <: MPFFActionContext] extend
     }
   }
 
-  protected def finalizeResult(result: SimpleResult)(implicit context: ActionContext): SimpleResult = {
+  protected def finalizeResult(result: Result)(implicit context: ActionContext): Result = {
     val r1 = result.withSession(context.sessionValues.reverse: _*)
     val r2 = if (context.headers.isEmpty) r1 else r1.withHeaders(context.headers: _*)
     val r3 = r2.flashing(context.flashingValues: _*)
@@ -51,7 +50,7 @@ abstract class MPFFAbstractController[ActionContext <: MPFFActionContext] extend
   // ----------------------------------------------------------------------
   // Rendering
 
-  protected def renderException(e: ControllerException)(implicit context: ActionContext): SimpleResult = {
+  protected def renderException(e: ControllerException)(implicit context: ActionContext): Result = {
     e.statusCode match {
       case 401 => renderLoginRequired()
       case 403 => renderForbidden()
@@ -64,9 +63,9 @@ abstract class MPFFAbstractController[ActionContext <: MPFFActionContext] extend
     }
   }
 
-  protected def renderInvalid(ec: UserErrorCode, e: Option[Throwable] = None, optionalInfo: Option[Map[String, String]] = None)(implicit context: ActionContext): SimpleResult
-  protected def renderError(ec: ServerErrorCode, e: Option[Throwable] = None, optionalInfo: Option[Map[String, String]] = None)(implicit context: ActionContext): SimpleResult
-  protected def renderLoginRequired()(implicit context: ActionContext): SimpleResult
-  protected def renderForbidden()(implicit context: ActionContext): SimpleResult
-  protected def renderNotFound()(implicit context: ActionContext): SimpleResult
+  protected def renderInvalid(ec: UserErrorCode, e: Option[Throwable] = None, optionalInfo: Option[Map[String, String]] = None)(implicit context: ActionContext): Result
+  protected def renderError(ec: ServerErrorCode, e: Option[Throwable] = None, optionalInfo: Option[Map[String, String]] = None)(implicit context: ActionContext): Result
+  protected def renderLoginRequired()(implicit context: ActionContext): Result
+  protected def renderForbidden()(implicit context: ActionContext): Result
+  protected def renderNotFound()(implicit context: ActionContext): Result
 }

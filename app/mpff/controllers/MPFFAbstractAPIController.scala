@@ -5,11 +5,14 @@ import java.nio.charset.Charset
 import mpff.resources.ServerErrorCode
 import mpff.resources.UserErrorCode
 import play.api.Logger
+import play.api.i18n.I18nSupport
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json
-import play.api.mvc.SimpleResult
+import play.api.mvc.Result
 
-abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] extends MPFFAbstractController[ActionContext] {
+abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext]
+    extends MPFFAbstractController[ActionContext]
+    with I18nSupport {
   private val UTF8 = Charset.forName("UTF8")
   private val RESULT_KEY = "result"
   private val RESULT_ERROR_ID_KEY = "errorId"
@@ -18,15 +21,15 @@ abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] ext
 
   // ----------------------------------------------------------------------
 
-  def renderOK()(implicit context: ActionContext): SimpleResult = {
+  def renderOK()(implicit context: ActionContext): Result = {
     renderJson(Json.obj(RESULT_KEY -> "ok"))
   }
 
-  def renderJson(obj: JsValue, status: Int = OK)(implicit context: ActionContext): SimpleResult = {
+  def renderJson(obj: JsValue, status: Int = OK)(implicit context: ActionContext): Result = {
     finalizeResult(Status(status)(obj))
   }
 
-  override protected def renderInvalid(ec: UserErrorCode, e: Option[Throwable], optInfo: Option[Map[String, String]])(implicit context: ActionContext): SimpleResult = {
+  override protected def renderInvalid(ec: UserErrorCode, e: Option[Throwable], optInfo: Option[Map[String, String]])(implicit context: ActionContext): Result = {
     e match {
       case None => ()
       case Some(x) => Logger.info("renderInvalid", x)
@@ -41,7 +44,7 @@ abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] ext
     renderJson(json, BAD_REQUEST)
   }
 
-  override protected def renderError(ec: ServerErrorCode, e: Option[Throwable], optInfo: Option[Map[String, String]])(implicit context: ActionContext): SimpleResult = {
+  override protected def renderError(ec: ServerErrorCode, e: Option[Throwable], optInfo: Option[Map[String, String]])(implicit context: ActionContext): Result = {
     e match {
       case None => ()
       case Some(x) => Logger.info("renderInvalid", x)
@@ -56,7 +59,7 @@ abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] ext
     renderJson(json, INTERNAL_SERVER_ERROR)
   }
 
-  override protected def renderLoginRequired()(implicit context: ActionContext): SimpleResult = {
+  override protected def renderLoginRequired()(implicit context: ActionContext): Result = {
     val json = Json.obj(
       RESULT_KEY -> "auth",
       DESCRIPTION_KEY -> "Login is required"
@@ -67,7 +70,7 @@ abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] ext
     )
   }
 
-  override protected def renderForbidden()(implicit context: ActionContext): SimpleResult = {
+  override protected def renderForbidden()(implicit context: ActionContext): Result = {
     val json = Json.obj(
       RESULT_KEY -> "forbidden",
       DESCRIPTION_KEY -> "Forbidden action"
@@ -75,7 +78,7 @@ abstract class MPFFAbstractAPIController[ActionContext <: MPFFActionContext] ext
     renderJson(json, FORBIDDEN)
   }
 
-  override protected def renderNotFound()(implicit context: ActionContext): SimpleResult = {
+  override protected def renderNotFound()(implicit context: ActionContext): Result = {
     val json = Json.obj(
       RESULT_KEY -> "notfound",
       DESCRIPTION_KEY -> "Not found"
