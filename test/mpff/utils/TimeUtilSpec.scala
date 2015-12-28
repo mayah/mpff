@@ -2,11 +2,9 @@ package mpff.utils
 
 import org.joda.time.DateTime
 import org.specs2.mutable.Specification
-import org.specs2.specification.AfterExample
-import org.specs2.specification.BeforeExample
-import org.specs2.specification.BeforeAfterExample
+import org.specs2.specification.BeforeAfterEach
 
-class TimeUtilSpec extends Specification with BeforeAfterExample {
+class TimeUtilSpec extends Specification with BeforeAfterEach {
   def before = {
     TimeUtil.resetCurrentDateTime()
   }
